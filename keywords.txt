@@ -1,0 +1,30 @@
+#######################################
+# Syntax Coloring Map for FSS100 library
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+FSS100	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+init	KEYWORD2
+getSample	KEYWORD2
+getTheta    KEYWORD2
+getPhi  KEYWORD2
+setI2CAddress   KEYWORD2
+updCtrl KEYWORD2
+setSamplingContinuous   KEYWORD2
+setSamplingRate KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+SAMPLING_NONE	LITERAL1
+SAMPLING_X1	LITERAL1
+SAMPLING_X2	LITERAL1
+SAMPLING_X4	LITERAL1
+SAMPLING_X8	LITERAL1
+SAMPLING_X16	LITERAL1
