@@ -30,6 +30,9 @@ void FSS100::getSample(int *theta, int *phi)
     Wire.write(0x00);
     Wire.endTransmission();
 
+    *theta = 0
+    *phi = 0;
+
     int i = 0;
 
     Wire.requestFrom(_addr, 4);
