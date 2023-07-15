@@ -52,12 +52,12 @@ void FSS100::getSample(int *theta, int *phi)
     }
 }
 
-int16 FSS100::getTheta() {
+int16_t FSS100::getTheta() {
     Wire.beginTransmission(_addr);
     Wire.write(0x00);
     Wire.endTransmission();
 
-    int16 theta = 0;
+    int16_t theta = 0;
     int i = 0;
     Wire.requestFrom(_addr, 2);
     while(Wire.available()) {
@@ -73,12 +73,12 @@ int16 FSS100::getTheta() {
     return theta;
 }
 
-int16 FSS100::getPhi() {
+int16_t FSS100::getPhi() {
     Wire.beginTransmission(_addr);
     Wire.write(0x02);
     Wire.endTransmission();
 
-    int16 phi = 0;
+    int16_t phi = 0;
     int i = 0;
     Wire.requestFrom(_addr, 2);
     while(Wire.available()) {

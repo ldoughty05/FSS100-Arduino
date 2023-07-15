@@ -9,8 +9,8 @@ public:
     FSS100(int address);
     void init();
     void getSample(int *theta, int *phi);
-    int16 getTheta();
-    int16 getPhi();
+    int16_t getTheta();
+    int16_t getPhi();
     void setI2CAddress(int address);
     void updCtrl(uint8_t ctrl);
     void setContinuousSampling(bool continuous);
