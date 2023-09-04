@@ -1,4 +1,3 @@
-
 #include "Energia.h"
 #include "FSS100.h"
 #include <Wire.h>
@@ -8,48 +7,87 @@
 FSS100::FSS100(int address)
 {
     _addr = address;
-    _ctrlReg = 0;
+    _conl_reg = 0;
 }
 
 void FSS100::init()
 {
-    _ctrlReg |= 0x40; // Sampling Mode = Continuous
-    _ctrlReg |= 0x10; // Sampling Rate = 16 Hz
-
-    Wire.begin();
-
-    Wire.beginTransmission(_addr);
-    Wire.write(0x0A);
-    Wire.write(_ctrlReg);
-    Wire.endTransmission();
+	Wire.begin();
+	default_config();
 }
 
-void FSS100::getSample(int *theta, int *phi)
+void FSS100::default_config(void)
+{
+	setContinuousSampling(false);
+	setSamplingRate(FSS100_SR_16HZ);
+	setSampleBit(true);
+	update_conl();
+}
+
+bool FSS100::sample_wait()
+{
+	long start_time = micros();
+	int tries = 5;
+	bool sample = false;
+	while (!sample)
+	{
+		Wire.beginTransmission(_addr);
+		Wire.write(0x0A);
+		Wire.endTransmission();
+		Wire.requestFrom(_addr, 1);
+		while (Wire.available())
+		{
+			char c = Wire.read();
+			if (!(c & (1 << 7)))
+			{
+				Serial.print("Completed in ");
+				Serial.println(micros() - start_time);
+				return true;
+			}
+			if (tries-- <= 0)
+			{
+				return false;
+			}
+		}
+	}
+}
+
+void FSS100::getSample(int16_t *theta, int16_t *phi)
 {
     Wire.beginTransmission(_addr);
     Wire.write(0x00);
     Wire.endTransmission();
 
-    *theta = 0
-    *phi = 0;
+    uint16_t theta_out = 0;
+    uint16_t phi_out = 0;
 
     int i = 0;
 
     Wire.requestFrom(_addr, 4);
-    while(Wire.available()) {
+    while(Wire.available()) 
+	{
         char c = Wire.read();
-        if (i == 0) {
-            *theta = c;
-        } else if (i == 1) {
-            *theta |= (c << 8);
-        } else if (i == 2) {
-            *phi = c;
-        } else if (i == 3) {
-            *phi |= (c << 8);
+        if (i == 0) 
+		{
+            theta_out = c;
+        } 
+		else if (i == 1) 
+		{
+            theta_out |= (c << 8);
+        } 
+		else if (i == 2) 
+		{
+            phi_out = c;
+        } 
+		else if (i == 3) 
+		{
+            phi_out |= (c << 8);
         }
 
         i++;
     }
+	*theta = theta_out;
+	*phi = phi_out;
 }
 
 int16_t FSS100::getTheta() {
@@ -60,11 +98,15 @@ int16_t FSS100::getTheta() {
     int16_t theta = 0;
     int i = 0;
     Wire.requestFrom(_addr, 2);
-    while(Wire.available()) {
+    while(Wire.available()) 
+	{
         char c = Wire.read();
-        if (i == 0) {
+        if (i == 0) 
+		{
             theta |= c;
-        } else if (i == 1) {
+        } 
+		else if (i == 1) 
+		{
             theta |= (c << 8);
         }
         i++;
@@ -73,7 +115,8 @@ int16_t FSS100::getTheta() {
     return theta;
 }
 
-int16_t FSS100::getPhi() {
+int16_t FSS100::getPhi() 
+{
     Wire.beginTransmission(_addr);
     Wire.write(0x02);
     Wire.endTransmission();
@@ -81,11 +124,15 @@ int16_t FSS100::getPhi() {
     int16_t phi = 0;
     int i = 0;
     Wire.requestFrom(_addr, 2);
-    while(Wire.available()) {
+    while(Wire.available())
+	{
         char c = Wire.read();
-        if (i == 0) {
+        if (i == 0) 
+		{
             phi |= c;
-        } else if (i == 1) {
+        } 
+		else if (i == 1) 
+		{
             phi |= (c << 8);
         }
         i++;
@@ -104,38 +151,27 @@ void FSS100::setI2CAddress(int newAddress)
     _addr = newAddress;
 }
 
-void FSS100::updCtrl(uint8_t ctrl)
+void FSS100::update_conl(void)
 {
-    _ctrlReg = ctrl;
-
     Wire.beginTransmission(_addr);
     Wire.write(0x0A);
-    Wire.write(_ctrlReg);
+    Wire.write(_conl_reg);
     Wire.endTransmission();
 }
 
 void FSS100::setContinuousSampling(bool continuous)
 {
-    if (continuous) {
-        _ctrlReg |= 0x40;
-    } else {
-        _ctrlReg &= 0xBF;
-    }
-
-    this->updCtrl(_ctrlReg);
+    if (continuous) _conl_reg |= FSS100_CONL_CONTINUOUS;
+    else _conl_reg &= FSS100_CONL_ONESHOT;
 }
 
 void FSS100::setSamplingRate(int samplingRate)
 {
-    _ctrlReg &= 0xE7;
+    _conl_reg |= samplingRate;
+}
 
-    if (samplingRate <= 4) {
-        _ctrlReg |= 0x00; // 4 Hz
-    } else if (samplingRate <= 8) {
-        _ctrlReg |= 0x08; // 8 Hz
-    } else {
-        _ctrlReg |= 0x10; // 16 Hz
-    }
-
-    this->updCtrl(_ctrlReg);
+void FSS100::setSampleBit(bool sample)
+{
+	if (sample) _conl_reg |= FSS100_CONL_SAMPLEREQUEST;
+	else _conl_reg &= FSS100_CONL_SAMPLEDONE;
 }

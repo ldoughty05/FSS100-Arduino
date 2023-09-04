@@ -1,18 +1,7 @@
 # FSS100 Sun Sensor library 
 
-## Table of Contents
-
-FSS100(int address);
-void init();
-void getSample(int *theta, int *phi);
-int16 getTheta();
-int16 getPhi();
-void setI2CAddress(int address);
-void updCtrl(uint8_t ctrl);
-void setContinuousSampling(bool continuous);
-void setSamplingRate(int rate);
-
 ## Description
+This library implements communication with Tensor Tech's FSS100 sun vector sensor.
 
 ## Functions
 
@@ -40,7 +29,7 @@ Returns the currently stored phi value.
 
 Takes an unsigned 8 bit integer, which will be set as the new I2C address of the FSS100 sun sensor. 
 
-### updCtrl
+### update_conl
 
 Takes an unsigned 8 bit integer which will be assigned to control register. The control register is described below.
 
@@ -62,7 +51,7 @@ Takes an unsigned 8 bit integer which will be assigned to control register. The 
 0 = Settings remain in random access memory.
 
 **SR: Sampling Rate**
-0b11 = 32 Hz (Not available on the FSS100 (or at least not the model we are using))
+0b11 = 32 Hz (Not available on the FSS100)
 0b10 = 16 Hz
 0b01 = 8 Hz
 0b00 = 4 Hz
@@ -79,4 +68,13 @@ Takes a boolean which, if true, will put the FSS100 in continuous mode. If the i
 
 Takes an integer, which will be assigned as the sampling rate. The input value will be rounded up the closest available sampling rate of 4, 8, or 16Hz. The sampling rate will then be updated on the FSS100 sun sensor.
 
-## Setup for Energia with MSP430 FR5969
+### sample_wait
+
+Monitors the sample bit in CONL for 5 tries and returns true if sample bit goes low or false is sample bit does not go low.  If this function returns true, then the needed data register can be collected.
+
+### default_config
+
+Sets the expected default configuration, which is 16 Hz sampling rate and one shot sampling mode.
+
+## Setup for Energia with MSP430
+To use in Energia with the MSP430, modify the pin_energia.h file of your chosen board to change the `DEFAULT_I2C` definition to 0.  The software implementation of I2C is not suitable for communication with the FSS100.
