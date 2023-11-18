@@ -40,8 +40,6 @@ bool FSS100::sample_wait()
 			char c = Wire.read();
 			if (!(c & (1 << 7)))
 			{
-				Serial.print("Completed in ");
-				Serial.println(micros() - start_time);
 				return true;
 			}
 			if (tries-- <= 0)
