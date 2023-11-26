@@ -14,23 +14,24 @@
 
 class FSS100
 {
-public:
-    FSS100(int address);
-    void init();
-    void getSample(int16_t *theta, int16_t *phi);
-    int16_t getTheta();
-    int16_t getPhi();
-    void setI2CAddress(int address);
-    void update_conl();
-    void setContinuousSampling(bool continuous);
-    void setSamplingRate(int rate);
+	public:
+	FSS100(int address);
+	void init();
+	void getSample(int16_t *theta, int16_t *phi);
+	int16_t getTheta();
+	int16_t getPhi();
+	void setI2CAddress(int address);
+	void update_conl();
+	void setContinuousSampling(bool continuous);
+	void setSamplingRate(int rate);
 	bool sample_wait(void);
 	void setSampleBit(bool sample);
 	void default_config(void);
+	void continuous_config(void);
 
-private:
-    int _addr;
-    uint8_t _conl_reg;
+	private:
+	int _addr;
+	uint8_t _conl_reg;
 };
 
 #endif // FSS100
