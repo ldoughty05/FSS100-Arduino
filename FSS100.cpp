@@ -41,7 +41,7 @@ void FSS100::set_one_shot(void)
 bool FSS100::sample_wait()
 {
 	Wire.beginTransmission(_addr);
-	Wire.write(0x08);
+	Wire.write(0x0A);
 	Wire.endTransmission();
 	Wire.requestFrom(_addr, 1);
 	if (Wire.available())
