@@ -1,7 +1,13 @@
 # FSS100 Sun Sensor library 
 
 ## Description
-This library implements communication with Tensor Tech's FSS100 sun vector sensor.
+This library implements communication with Tensor Tech's FSS100 sun vector sensor. 
+
+## Installation
+To use this library in your PlatformIO project, start by `cd`-ing into your projects 'lib' directory.  
+Run `git clone git@github.com:ldoughty05/FSS100-Arduino.git`  
+...and you're good to go!
+
 
 ## Functions
 
@@ -9,27 +15,27 @@ This library implements communication with Tensor Tech's FSS100 sun vector senso
 
 Takes the I2C address of the FSS100 Sun Vector Sensor.
 
-### Init
+### Init()
 
 Begins the Wire library. It also sets the FSS100 Sun Vector Sensor Control Register 
 
-### getSample
+### getSample()
 
 Takes pointers to theta and phi variables. The pointers are then given the current values of the theta and phi registers.
 
-### getTheta
+### getTheta()
 
 Returns the currently stored theta value.
 
-### getPhi
+### getPhi()
 
 Returns the currently stored phi value. 
 
-### setI2CAddress
+### setI2CAddress()
 
 Takes an unsigned 8 bit integer, which will be set as the new I2C address of the FSS100 sun sensor. 
 
-### update_control
+### update_control()
 
 Takes an unsigned 8 bit integer which will be assigned to control register. The control register is described below.
 
@@ -60,19 +66,19 @@ Takes an unsigned 8 bit integer which will be assigned to control register. The 
 1 = Unlocks the extend registers. Extend register contain factory calibration data, please consult Tensor Tech before modifying them.
 0 = Extend registers locked.
 
-### setContinuousSampling
+### setContinuousSampling()
 
 Takes a boolean which, if true, will put the FSS100 in continuous mode. If the input is false, then the sun sensor will be put into one-shot mode, where the data registers will not be updated.
 
-### setSamplingRate
+### setSamplingRate()
 
 Takes an integer, which will be assigned as the sampling rate. The input value will be rounded up the closest available sampling rate of 4, 8, or 16Hz. The sampling rate will then be updated on the FSS100 sun sensor.
 
-### sample_wait
+### sample_wait()
 
 Monitors the sample bit in CONL for 5 tries and returns true if sample bit goes low or false is sample bit does not go low.  If this function returns true, then the needed data register can be collected.
 
-### default_config
+### default_config()
 
 Sets the expected default configuration, which is 16 Hz sampling rate and one shot sampling mode.
 

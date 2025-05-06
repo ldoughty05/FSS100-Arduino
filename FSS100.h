@@ -78,22 +78,22 @@ class FSS100
 	 * Sets the continuous sampling bit in the control register. If set to true, the sensor will continuously sample data. If set to false, the sensor will only sample data when requested.
 	 * @param continuous True to set the continuous sampling bit, false for one-shot sampling.
 	 */
-	void setContinuousSampling(bool continuous);
+	void setContinuousSampling(bool continuousIsEnabled);
 
 	/*
 	 * Sets the sampling rate of the sensor. 
-	 * @param rate The desired sampling rate in Hz. Must be one of the following: 4, 8, 16, or 32Hz.
+	 * @param samplingRate The desired sampling rate in Hz. Must be one of the following: 4, 8, 16, or 32Hz.
 	 */
-	void setSamplingRate(int rate);
+	void setSamplingRate(int samplingRate);
 
 	/*
 	 * Monitors the sample bit in CONL for 5 tries and returns true if sample bit goes low, or false is sample bit does not go low.
 	 * If this function returns true, then the needed data register can be collected.
 	 */
-	bool sample_wait(void);
+	bool sample_wait();
 
-	void setSampleBit(bool sample);
-	void setCommitBit(bool commit);
+	void setSampleBit(bool sampleBit);
+	void setCommitBit(bool commitBit);
 	
 	/*
 	 * Sets the expected default configuration, which is 16 Hz sampling rate and one shot sampling mode.

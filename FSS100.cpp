@@ -241,9 +241,9 @@ uint8_t FSS100::getAddress(void)
 	return addr_reg;
 }
 
-void FSS100::setContinuousSampling(bool continuous)
+void FSS100::setContinuousSampling(bool continuousIsEnabled)
 {
-	if (continuous) _control_reg |= FSS100_control_CONTINUOUS;
+	if (continuousIsEnabled) _control_reg |= FSS100_control_CONTINUOUS;
 	else _control_reg &= FSS100_control_ONESHOT;
 }
 
@@ -253,14 +253,14 @@ void FSS100::setSamplingRate(int samplingRate)
 	_control_reg |= samplingRate;
 }
 
-void FSS100::setCommitBit(bool commit)
+void FSS100::setCommitBit(bool commitBit)
 {
-	if (commit) _control_reg |= FSS100_control_COMMIT;
+	if (commitBit) _control_reg |= FSS100_control_COMMIT;
 	else _control_reg &= FSS100_control_COMMIT_CLEAR;
 }
 
-void FSS100::setSampleBit(bool sample)
+void FSS100::setSampleBit(bool sampleBit)
 {
-	if (sample) _control_reg |= FSS100_control_SAMPLEREQUEST;
+	if (sampleBit) _control_reg |= FSS100_control_SAMPLEREQUEST;
 	else _control_reg &= FSS100_control_SAMPLEDONE;
 }
