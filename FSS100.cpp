@@ -1,11 +1,11 @@
-#include "Energia.h"
 #include "FSS100.h"
+#include <Arduino.h>
 #include <Wire.h>
 
 FSS100::FSS100(int address)
 {
 	_addr = address;
-	_conl_reg = 0;
+	_control_reg = 0;
 }
 
 void FSS100::init()
@@ -18,8 +18,8 @@ void FSS100::default_config(void)
 	setContinuousSampling(false);
 	setSamplingRate(FSS100_SR_16HZ);
 	setSampleBit(true);
-	uint8_t current_conl = get_conl();
-	if (current_conl != _conl_reg)  update_conl();
+	uint8_t current_control = get_control();
+	if (current_control != _control_reg)  update_control();
 }
 
 void FSS100::continuous_config(void)
@@ -27,15 +27,15 @@ void FSS100::continuous_config(void)
 	setContinuousSampling(true);
 	setSamplingRate(FSS100_SR_16HZ);
 	setSampleBit(false);
-	uint8_t current_conl = get_conl();
-	if (current_conl != _conl_reg) update_conl();
+	uint8_t current_control = get_control();
+	if (current_control != _control_reg) update_control();
 }
 
 void FSS100::set_one_shot(void)
 {
-	set_conl(get_conl());
+	set_control(get_control());
 	setSampleBit(true);
-	update_conl();
+	update_control();
 }
 
 bool FSS100::sample_wait()
@@ -194,34 +194,34 @@ void FSS100::setI2CAddress(int newAddress)
 	_addr = newAddress;
 }
 
-uint8_t FSS100::get_conl(void)
+uint8_t FSS100::get_control(void)
 {
 	Wire.beginTransmission(_addr);
 	Wire.write(0x0A);
 	Wire.endTransmission();
 
-	uint8_t conl_reg = 0;
+	uint8_t control_reg = 0;
 	int i = 0;
 	Wire.requestFrom(_addr, 1);
 	while(Wire.available())
 	{
-		conl_reg = Wire.read();
+		control_reg = Wire.read();
 	}
 
-	return conl_reg;
+	return control_reg;
 }
 
-void FSS100::update_conl(void)
+void FSS100::update_control(void)
 {
 	Wire.beginTransmission(_addr);
 	Wire.write(0x0A);
-	Wire.write(_conl_reg);
+	Wire.write(_control_reg);
 	Wire.endTransmission();
 }
 
-void FSS100::set_conl(uint8_t new_conl)
+void FSS100::set_control(uint8_t new_control)
 {
-	_conl_reg = new_conl;
+	_control_reg = new_control;
 }
 
 uint8_t FSS100::getAddress(void)
@@ -243,24 +243,24 @@ uint8_t FSS100::getAddress(void)
 
 void FSS100::setContinuousSampling(bool continuous)
 {
-	if (continuous) _conl_reg |= FSS100_CONL_CONTINUOUS;
-	else _conl_reg &= FSS100_CONL_ONESHOT;
+	if (continuous) _control_reg |= FSS100_control_CONTINUOUS;
+	else _control_reg &= FSS100_control_ONESHOT;
 }
 
 void FSS100::setSamplingRate(int samplingRate)
 {
-	_conl_reg &= FSS100_SR_CLEAR;
-	_conl_reg |= samplingRate;
+	_control_reg &= FSS100_SR_CLEAR;
+	_control_reg |= samplingRate;
 }
 
 void FSS100::setCommitBit(bool commit)
 {
-	if (commit) _conl_reg |= FSS100_CONL_COMMIT;
-	else _conl_reg &= FSS100_CONL_COMMIT_CLEAR;
+	if (commit) _control_reg |= FSS100_control_COMMIT;
+	else _control_reg &= FSS100_control_COMMIT_CLEAR;
 }
 
 void FSS100::setSampleBit(bool sample)
 {
-	if (sample) _conl_reg |= FSS100_CONL_SAMPLEREQUEST;
-	else _conl_reg &= FSS100_CONL_SAMPLEDONE;
+	if (sample) _control_reg |= FSS100_control_SAMPLEREQUEST;
+	else _control_reg &= FSS100_control_SAMPLEDONE;
 }

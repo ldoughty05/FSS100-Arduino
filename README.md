@@ -29,7 +29,7 @@ Returns the currently stored phi value.
 
 Takes an unsigned 8 bit integer, which will be set as the new I2C address of the FSS100 sun sensor. 
 
-### update_conl
+### update_control
 
 Takes an unsigned 8 bit integer which will be assigned to control register. The control register is described below.
 
