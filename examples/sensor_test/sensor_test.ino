@@ -10,5 +10,7 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly: 
-  int16 theta = myFSS100.getTheta();
+  int16_t theta = myFSS100.getTheta();
+  Serial.print("Theta: ");
+  Serial.println(theta);
 }
